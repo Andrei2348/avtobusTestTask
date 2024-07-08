@@ -4,6 +4,9 @@ html {
 }
 button{
   cursor: pointer;
+  outline: none;
+  border: none;
+  background-color: transparent;
 }
 *,
 *::before,
@@ -61,33 +64,37 @@ body {
   margin: 0 auto;
   padding: 0 10px;
 }
-.header__person-button {
+.button {
   display: flex;
   align-items: center;
   font-size: 14px;
   font-weight: 700;
   line-height: 1.29;
   color: #fff;
-  outline: none;
   padding: 10px 14px;
-  border: none;
   border-radius: 6px;
   transition: all ease-in-out 0.6s;
 }
-.header__person-button.red__button {
+.red__button {
   background-color: #f81155;
 }
-.header__person-button.red__button:hover {
+.red__button:hover {
   background-color: #d1003e;
 }
-.header__person-button img {
+.button img {
   height: 10px;
   width: 10px;
   margin-left: 12px;
 }
-.header__person-button.blue__button {
+.blue__button {
   background-color: #005bfe;
 }
-.header__person-button.blue__button:hover {
+.blue__button:hover {
   background-color: #0047c6;
+}
+.transparent__button {
+  color: rgba(0, 91, 254, 1);
+}
+.transparent__button:hover{
+  background-color: rgba(0, 91, 254, 0.1);
 }
