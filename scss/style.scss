@@ -1,0 +1,56 @@
+/** @format */
+
+// @import "libs";
+@import "global";
+@import "fonts";
+@import "variables";
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.header{
+  background-color: #fff;
+  box-shadow: 0px 4px 20px 0 rgba(0, 0, 0, 0.05);
+  padding: 16px 0;
+  & .container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__button-contacts--wrapper,
+  &__person-wrapper{
+    display: flex;
+    align-items: center;
+  }
+  &__button-contacts--wrapper{
+    outline: none;
+    border: none;
+    background: transparent;
+    
+  }
+  &__button-contacts--wrapper svg path{
+    transition: all ease-in-out 0.6s;
+  }
+  &__button-contacts--wrapper:hover .header__button-contacts--text{
+    color: #0047c6;
+  }
+  &__button-contacts--wrapper:hover svg path{
+    fill: #0047c6;
+  }
+  &__button-contacts--text{
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+    color: #005BFE;
+    margin-left: 16px;
+    transition: all ease-in-out 0.6s;
+  }
+  &__person-wrapper .header__person-button.red__button{
+    margin-right: 16px;
+  }
+}
+
+
+@import "media";

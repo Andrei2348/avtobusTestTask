@@ -1,0 +1,21 @@
+:root {
+  --color-text: #fff;
+  --color-text-span: #ffffff80;
+  --color-stack: #fbfcff80;
+  --color-bg: #212429;
+  --color-dots: #d9d9d933;
+  --color-menu: #141c29;
+  --color-menu-text: #E3E3E3;
+  --color-scroll: #555;
+}
+
+.light-mode {
+  --color-text: #282828;
+  --color-text-span: #28282880;
+  --color-stack: #28282850;
+  --color-bg: #E3E3E3;
+  --color-dots: #53535333;
+  --color-menu: #E3E3E3;
+  --color-menu-text: #28282880;
+  --color-scroll: #888;
+}
