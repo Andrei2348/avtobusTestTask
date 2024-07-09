@@ -1,5 +1,5 @@
 import LocalStorageUtil from './storage.js';
-import { addCategory, renderCategory } from './render.js';
+import { renderCategory, renderCategoryForUser,renderAllUsers } from './render.js';
 
 const categoriesList = document.getElementById('groups__list');
 const addUserForm = document.getElementById('add__user');
@@ -20,34 +20,23 @@ let fullName,
 // записей нет, создаем
 LocalStorageUtil.hasItem('categories');
 LocalStorageUtil.hasItem('users');
-
+showAllUsers()
+let allUsers = LocalStorageUtil.getItem('users');
+let allCategories = LocalStorageUtil.getItem('categories');
 
 
 // Открытие и закрытие aside
 categoriesList.onclick = function () {
   document.getElementById('aside__groups-list').classList.add('active');
-  console.log(LocalStorageUtil.getItem('categories'));
   renderCategory(LocalStorageUtil.getItem('categories'));
-
-  // Удаление выбранной категории
-  if (document.querySelectorAll('.aside__category-delete')) {
-    document.querySelectorAll('.aside__category-delete').forEach((element, index) => {
-      
-      element.onclick = () => {
-        const allCategories = LocalStorageUtil.getItem('categories');
-        const idToRemove = Number(element.getAttribute('data-id'))
-        const filteredArray = allCategories.filter(item => item.id !== idToRemove);
-        LocalStorageUtil.setItem('categories', filteredArray);
-        renderCategory(LocalStorageUtil.getItem('categories'));
-      };
-    });
-  }
+  categoryService()
 };
 
 addUserForm.onclick = function () {
   document.getElementById('aside__add-user').classList.add('active');
   personData.value = '';
   personPhone.value = '';
+  renderCategoryForUser(LocalStorageUtil.getItem('categories'))
   // Добавить сброс селекта
 };
 
@@ -86,6 +75,7 @@ savePerson.onclick = function () {
     console.log(user);
     let usersArray = LocalStorageUtil.getItem('users');
     LocalStorageUtil.setItem('users', [...usersArray, user]);
+    
   }
 };
 
@@ -93,34 +83,45 @@ savePerson.onclick = function () {
 // ==========================================================
 
 
-// Добавление новой категории (отображение в списке)
-addCategoryButton.onclick = function () {
-  addCategory();
-  addCategoryButton.disabled = true;
 
-// Получение новой категории из input
-  document.querySelector('.aside__category-name--input').addEventListener('input', function (e) {
-    categoryName = e.target.value;
-    console.log(categoryName);
-    categoryName ? (saveCategoryButton.disabled = false) : (saveCategoryButton.disabled = true);
-  });
-}
-
-// Сохранение новой категории
-saveCategoryButton.onclick = function () {
-  let category = {};
+// Работа с категориями
+function createCategory(value){
   let lastId = 0;
   let categoriesArray = LocalStorageUtil.getItem('categories');
   if(categoriesArray.length > 0){
     lastId = categoriesArray.at(-1).id
   }
-  category = {
+  let category = {
     id: (lastId + 1),
-    category: categoryName,
+    category: value,
   };
-  addCategoryButton.disabled = false;
-  saveCategoryButton.disabled = true
-  LocalStorageUtil.setItem('categories', [...categoriesArray, category]);
-  renderCategory(LocalStorageUtil.getItem('categories'));
-};
+  return [...categoriesArray, category]
+}
 
+function categoryService(){
+  addCategoryButton.onclick = function () {
+    addCategoryButton.disabled = true;
+    const newCategories = createCategory('');
+    renderCategory(newCategories);
+    const inputs = document.querySelectorAll('.aside__category-name')
+    inputs[inputs.length - 1].readOnly = false;
+    inputs[inputs.length - 1].addEventListener('input', function (e) {
+      categoryName = e.target.value;
+      categoryName ? (saveCategoryButton.disabled = false) : (saveCategoryButton.disabled = true);
+    });
+
+    saveCategoryButton.onclick = function () {
+      addCategoryButton.disabled = false;
+      saveCategoryButton.disabled = true
+      LocalStorageUtil.setItem('categories', createCategory(categoryName));
+      renderCategory(LocalStorageUtil.getItem('categories'));
+    };
+  }
+}
+
+// Отображение пользователя
+function showAllUsers(){
+  if(allCategories.length > 0){
+    renderAllUsers()
+  }
+}

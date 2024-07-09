@@ -274,19 +274,6 @@ body {
   fill: #fff;
   opacity: 1;
 }
-.aside__category-name {
-  display: block;
-  width: 100%;
-  margin-right: 12px;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.14;
-  color: #000;
-  padding: 11px 12px;
-  background-color: rgba(0, 0, 0, 0.0509803922);
-  border-radius: 6px;
-  height: 38px;
-}
 .aside__form {
   display: flex;
   flex-direction: column;
@@ -329,7 +316,7 @@ body {
   background-color: transparent;
   text-align: center;
 }
-.aside__category-name--input {
+.aside__category-name {
   display: block;
   width: 100%;
   margin-right: 12px;
@@ -344,9 +331,99 @@ body {
   outline: none;
   border: none;
 }
-.aside__category-name--input::-moz-placeholder {
+.aside__category-name::-moz-placeholder {
   color: rgba(0, 0, 0, 0.3137254902);
 }
-.aside__category-name--input::placeholder {
+.aside__category-name::placeholder {
   color: rgba(0, 0, 0, 0.3137254902);
+}
+
+.info {
+  height: 100%;
+  width: 100%;
+}
+.info__wrapper {
+  margin-top: 126px;
+  margin-bottom: 56px;
+  overflow-y: auto;
+  height: calc(100vh - 200px);
+}
+.info__categories {
+  padding: 24px 24px 0 24px;
+  background-color: #fff;
+  border-radius: 6px;
+}
+.info__categories + .info__categories {
+  margin-top: 24px;
+}
+.info__categories img {
+  width: 12px;
+  height: 8px;
+}
+.info__categories .info__users {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.0509803922);
+}
+.info__categories .info__users:last-child {
+  border: none;
+}
+.info__users, .info__category-name {
+  display: flex;
+  align-items: center;
+}
+.info__title {
+  padding-top: 24px;
+  padding-bottom: 24px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.16;
+  color: rgba(0, 0, 0, 0.3137254902);
+}
+.info__title span {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.16;
+  color: #000000;
+}
+.info__edit-button {
+  margin-left: 24px;
+  cursor: pointer;
+}
+.info__delete-button {
+  margin-left: 10px;
+  cursor: pointer;
+}
+.info__edit-button, .info__edit-button rect {
+  transition: all ease 0.3s;
+}
+.info__edit-button:hover rect {
+  opacity: 1;
+  stroke: transparent;
+  fill: #005BFE;
+}
+.info__edit-button:hover g path {
+  fill: white;
+  opacity: 1;
+}
+.info__delete-button:hover rect {
+  fill: #ea3d2f;
+  opacity: 1;
+  stroke: #ea3d2f;
+}
+.info__delete-button:hover g path {
+  fill: #fff;
+  opacity: 1;
+}
+.info__users {
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
+}
+.info__categories.active .info__users {
+  height: auto;
+  opacity: 1;
+  visibility: visible;
 }/*# sourceMappingURL=style.css.map */

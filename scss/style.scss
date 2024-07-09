@@ -144,19 +144,6 @@
     fill: #fff;
     opacity: 1;
   }
-  &__category-name {
-    display: block;
-    width: 100%;
-    margin-right: 12px;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.14;
-    color: #000;
-    padding: 11px 12px;
-    background-color: #0000000d;
-    border-radius: 6px;
-    height: 38px;
-  }
   &__form {
     display: flex;
     flex-direction: column;
@@ -197,7 +184,7 @@
     background-color: transparent;
     text-align: center;
   }
-  &__category-name--input{
+  &__category-name{
     display: block;
     width: 100%;
     margin-right: 12px;
@@ -212,16 +199,120 @@
     outline: none;
     border: none;
   }
-  &__category-name--input::placeholder{
+  &__category-name::placeholder{
     color: #00000050;
   }
 }
 
-// #aside__add-user{
-//   opacity: 1;
-//   visibility: visible;
-//   transform: translateX(0);
-// }
+.info{
+  height: 100%;
+  width: 100%;
+  &__wrapper{
+    margin-top: 126px;
+    margin-bottom: 56px;
+    overflow-y: auto;
+    height: calc(100vh - 200px);
+  }
+  &__categories{
+    padding: 24px 24px 0 24px;
+    background-color: #fff;
+    border-radius: 6px;
+    
+  }
+  &__categories + .info__categories{
+    margin-top: 24px;
+  }
+  // &__categories .info__category-name{
+  //   display: flex;
+  //   align-items:start;
+  //   justify-content: space-between;
+  //   border-bottom: 1px solid #0000000d;
+  // }
+  
+  // &__categories .info__category-name p{
+  //   font-size: 18px;
+  //   font-weight: 1.5;
+  //   color: #005BFE;
+  //   font-weight: 700;
+  //   padding-bottom: 24px;
+  // }
+  &__categories img{
+    width: 12px;
+    height: 8px;
+  }
+  &__categories .info__users{
+    border-bottom: 1px solid #0000000d;
+  }
+  &__categories .info__users:last-child{
+    border: none;
+  }
+  &__users,
+  &__category-name{
+    display: flex;
+    align-items: center;
+  }
+  &__title{
+    padding-top: 24px;
+    padding-bottom: 24px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.16;
+    color: #00000050;
+  }
+  &__title span{
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.16;
+    color: #000000;
+  }
+  &__edit-button{
+    margin-left: 24px;
+    cursor: pointer;
+  }
+  &__delete-button{
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  &__edit-button,
+  &__edit-button rect{
+    transition: all ease 0.3s;
+  }
+  &__edit-button:hover rect{
+    opacity: 1;
+    stroke: transparent;
+    fill: #005BFE;
+  }
+  &__edit-button:hover g path{
+    fill: white;
+    opacity: 1;
+  }
+  &__delete-button:hover rect {
+    fill: #ea3d2f;
+    opacity: 1;
+    stroke: #ea3d2f;
+  }
+  &__delete-button:hover g path {
+    fill: #fff;
+    opacity: 1;
+  }
+
+  
+  &__users{
+    height: 0;
+    opacity: 0;
+    visibility: hidden;
+  }
+  &__categories.active .info__users{
+    height: auto;
+    opacity: 1;
+    visibility: visible;
+  }
+ 
+}
 
 
 
