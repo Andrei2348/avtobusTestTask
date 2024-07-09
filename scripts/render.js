@@ -52,12 +52,14 @@ const renderCategory = (categories) => {
       element.remove();
     });
   }
-  categories.forEach((category) => {
-    categoriesList.insertAdjacentHTML(
-      'beforeend',
-      `<div class="aside__category-inner">
+  if (categories) {
+    categories.forEach((category) => {
+      categoriesList.insertAdjacentHTML(
+        'beforeend',
+        `<div class="aside__category-inner">
                   <p class="aside__category-name">${category.category}</p>
                   <svg
+                    data-id='${category.id}'
                     class="aside__category-delete"
                     width="38"
                     height="38"
@@ -93,7 +95,8 @@ const renderCategory = (categories) => {
                     </defs>
                   </svg>
                 </div>`
-    );
-  });
+      );
+    });
+  }
 };
 export { addCategory, renderCategory };

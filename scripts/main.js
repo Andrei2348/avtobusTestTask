@@ -16,6 +16,13 @@ let fullName,
   categoryName,
   selectedCategory = '';
 
+// Проверяем существование записей в localStorage и, если
+// записей нет, создаем
+LocalStorageUtil.hasItem('categories');
+LocalStorageUtil.hasItem('users');
+
+
+
 // Открытие и закрытие aside
 categoriesList.onclick = function () {
   document.getElementById('aside__groups-list').classList.add('active');
@@ -24,15 +31,14 @@ categoriesList.onclick = function () {
 
   // Удаление выбранной категории
   if (document.querySelectorAll('.aside__category-delete')) {
-    console.log(document.querySelectorAll('.aside__category-delete'))
-    document.querySelectorAll('.aside__category-delete').forEach((element, i) => {
-      console.log(element, i);
+    document.querySelectorAll('.aside__category-delete').forEach((element, index) => {
       
       element.onclick = () => {
-        console.log(categoriesList)
-        // const newArray = LocalStorageUtil.getItem('categories').filter((item, i) => i !== i);
-        // LocalStorageUtil.setItem('categories', newArray);
-        // renderCategory(LocalStorageUtil.getItem('categories'));
+        const allCategories = LocalStorageUtil.getItem('categories');
+        const idToRemove = Number(element.getAttribute('data-id'))
+        const filteredArray = allCategories.filter(item => item.id !== idToRemove);
+        LocalStorageUtil.setItem('categories', filteredArray);
+        renderCategory(LocalStorageUtil.getItem('categories'));
       };
     });
   }
@@ -86,10 +92,6 @@ savePerson.onclick = function () {
 
 // ==========================================================
 
-// Проверяем существование записей в localStorage и, если
-// записей нет, создаем
-LocalStorageUtil.hasItem('categories');
-LocalStorageUtil.hasItem('users');
 
 // Добавление новой категории (отображение в списке)
 addCategoryButton.onclick = function () {
@@ -107,13 +109,17 @@ addCategoryButton.onclick = function () {
 // Сохранение новой категории
 saveCategoryButton.onclick = function () {
   let category = {};
-  console.log('save')
+  let lastId = 0;
+  let categoriesArray = LocalStorageUtil.getItem('categories');
+  if(categoriesArray.length > 0){
+    lastId = categoriesArray.at(-1).id
+  }
   category = {
+    id: (lastId + 1),
     category: categoryName,
   };
   addCategoryButton.disabled = false;
   saveCategoryButton.disabled = true
-  let categoriesArray = LocalStorageUtil.getItem('categories');
   LocalStorageUtil.setItem('categories', [...categoriesArray, category]);
   renderCategory(LocalStorageUtil.getItem('categories'));
 };
