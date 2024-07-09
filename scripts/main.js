@@ -1,47 +1,120 @@
-/** @format */
+import LocalStorageUtil from './storage.js';
+import { addCategory, renderCategory } from './render.js';
 
-const categoriesList = document.getElementById("groups__list");
-const addUserForm = document.getElementById("add__user");
-const asideCloseButton = document.querySelectorAll(".aside__close-button");
-const savePerson = document.getElementById("save__person");
-const personPhone = document.getElementById("profilePhone");
+const categoriesList = document.getElementById('groups__list');
+const addUserForm = document.getElementById('add__user');
+const asideCloseButton = document.querySelectorAll('.aside__close-button');
+const savePerson = document.getElementById('save__person');
+const personData = document.getElementById('profileData');
+const personPhone = document.getElementById('profilePhone');
+const personCategory = document.getElementById('profileCategory');
+const addCategoryButton = document.getElementById('add__category');
+const saveCategoryButton = document.getElementById('save__category');
 
+let fullName,
+  phone,
+  categoryName,
+  selectedCategory = '';
+
+// Открытие и закрытие aside
 categoriesList.onclick = function () {
-  document.getElementById("aside__groups-list").classList.add("active");
+  document.getElementById('aside__groups-list').classList.add('active');
+  console.log(LocalStorageUtil.getItem('categories'));
+  renderCategory(LocalStorageUtil.getItem('categories'));
+
+  // Удаление выбранной категории
+  if (document.querySelectorAll('.aside__category-delete')) {
+    console.log(document.querySelectorAll('.aside__category-delete'))
+    document.querySelectorAll('.aside__category-delete').forEach((element, i) => {
+      console.log(element, i);
+      
+      element.onclick = () => {
+        console.log(categoriesList)
+        // const newArray = LocalStorageUtil.getItem('categories').filter((item, i) => i !== i);
+        // LocalStorageUtil.setItem('categories', newArray);
+        // renderCategory(LocalStorageUtil.getItem('categories'));
+      };
+    });
+  }
 };
 
 addUserForm.onclick = function () {
-  document.getElementById("aside__add-user").classList.add("active");
+  document.getElementById('aside__add-user').classList.add('active');
+  personData.value = '';
+  personPhone.value = '';
+  // Добавить сброс селекта
 };
 
 asideCloseButton.forEach((button, index) => {
   button.onclick = function () {
-    document.querySelectorAll(".aside")[index].classList.remove("active");
+    document.querySelectorAll('.aside')[index].classList.remove('active');
   };
 });
+// ================================
 
-
-
-
+// Контроль ввода данных для регистрации пользователя
 personPhone.addEventListener('input', function (e) {
-    let x = e.target.value.replace(/\D/g, '').match(/(\d{1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
-    e.target.value = '+7(' + x[2] + ')' + x[3] + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
-    console.log(x)
+  phone = e.target.value.replace(/\D/g, '');
+  e.target.value = phone;
+});
+
+personData.addEventListener('input', () => {
+  fullName = personData.value;
+});
+// personPhone.addEventListener('input', (e) => {
+//   phone = e.target.value.replace(/\D/g, '').match(/(\d{1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
+//   e.target.value = '+7(' + phone[2] + ')' + phone[3] + (phone[4] ? '-' + phone[4] : '') + (phone[5] ? '-' + phone[5] : '');
+// });
+
+personCategory.addEventListener('change', (event) => {
+  selectedCategory = event.target.value;
+});
+
+savePerson.onclick = function () {
+  if (fullName && fullName.trim().split(/\s+/).length >= 3 && phone.length === 6 && selectedCategory !== '') {
+    const user = {
+      fullName: fullName,
+      phone: phone,
+      category: selectedCategory,
+    };
+    console.log(user);
+    let usersArray = LocalStorageUtil.getItem('users');
+    LocalStorageUtil.setItem('users', [...usersArray, user]);
+  }
+};
+
+
+// ==========================================================
+
+// Проверяем существование записей в localStorage и, если
+// записей нет, создаем
+LocalStorageUtil.hasItem('categories');
+LocalStorageUtil.hasItem('users');
+
+// Добавление новой категории (отображение в списке)
+addCategoryButton.onclick = function () {
+  addCategory();
+  addCategoryButton.disabled = true;
+
+// Получение новой категории из input
+  document.querySelector('.aside__category-name--input').addEventListener('input', function (e) {
+    categoryName = e.target.value;
+    console.log(categoryName);
+    categoryName ? (saveCategoryButton.disabled = false) : (saveCategoryButton.disabled = true);
   });
-
-function getInputData() {
-  const personData = document.getElementById("profileData").value;
-  
-  const select = document.getElementById("profileCategory");
-  const selectedCategory = select.options[select.selectedIndex].value;
-  console.log(personData)
-  
-
-  
-  console.log(selectedCategory)
 }
 
-savePerson.onclick = function() {
-    getInputData();
+// Сохранение новой категории
+saveCategoryButton.onclick = function () {
+  let category = {};
+  console.log('save')
+  category = {
+    category: categoryName,
+  };
+  addCategoryButton.disabled = false;
+  saveCategoryButton.disabled = true
+  let categoriesArray = LocalStorageUtil.getItem('categories');
+  LocalStorageUtil.setItem('categories', [...categoriesArray, category]);
+  renderCategory(LocalStorageUtil.getItem('categories'));
+};
 
-}
