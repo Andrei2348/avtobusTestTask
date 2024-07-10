@@ -325,12 +325,61 @@ function cleanInputFormUser(user) {
 }
 
 function createUser(user) {
-  // Контроль ввода данных для регистрации пользователя
-  personPhone.addEventListener("input", function (e) {
-    let phone = e.target.value.replace(/\D/g, "");
-    createdUser.phone = phone;
-    e.target.value = phone;
-  });
+  // Маска для телефона
+    personPhone.addEventListener('input', function(event) {
+      let input = event.target.value.replace(/\D/g, ''); 
+      if (input.startsWith('7')) { 
+        input = input.substring(1);
+      }
+      let formattedInput = '+7';
+  
+      if (input.length > 0) {
+        formattedInput += ' (' + input.substring(0, 3); 
+      }
+      if (input.length >= 4) {
+        formattedInput += ') ' + input.substring(3, 6); 
+      }
+      if (input.length >= 7) {
+        formattedInput += '-' + input.substring(6, 8); 
+      }
+      if (input.length >= 9) {
+        formattedInput += '-' + input.substring(8, 10); 
+      }
+  
+      event.target.value = formattedInput.substring(0, 18);
+      createdUser.phone = event.target.value;
+    });
+  
+    personPhone.addEventListener('keydown', function(event) {
+      // Если пользователь нажимает BACKSPACE или DELETE, удаляем последний символ
+      if (event.key === 'Backspace' || event.key === 'Delete') {
+        let input = event.target.value.replace(/\D/g, '');
+        if (input.startsWith('7')) {
+          input = input.substring(1);
+        }
+        event.target.value = formatPhone(input.substring(0, input.length - 1));
+        event.preventDefault();
+      }
+    });
+  
+    function formatPhone(input) {
+      let formattedInput = '+7';
+      if (input.length > 0) {
+        formattedInput += ' (' + input.substring(0, 3);
+      }
+      if (input.length >= 4) {
+        formattedInput += ') ' + input.substring(3, 6);
+      }
+      if (input.length >= 7) {
+        formattedInput += '-' + input.substring(6, 8);
+      }
+      if (input.length >= 9) {
+        formattedInput += '-' + input.substring(8, 10);
+      }
+      return formattedInput.substring(0, 18);
+    }
+  // ================================================================================
+  
   personData.addEventListener("input", () => {
     createdUser.fullName = personData.value;
   });
@@ -343,7 +392,7 @@ function createUser(user) {
     if (
       createdUser.fullName &&
       createdUser.fullName.trim().split(/\s+/).length >= 3 &&
-      createdUser.phone.length === 6 &&
+      createdUser.phone.length === 18 &&
       createdUser.category !== ""
     ) {
       if (!createdUser.hasOwnProperty("id")) {
