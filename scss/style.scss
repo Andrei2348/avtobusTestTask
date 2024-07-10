@@ -10,6 +10,7 @@
   flex-direction: column;
   min-height: 100vh;
   position: relative;
+  margin-bottom: 56px;
 }
 .header {
   background-color: #fff;
@@ -28,11 +29,6 @@
   &__person-wrapper {
     display: flex;
     align-items: center;
-  }
-  &__button-contacts--wrapper {
-    outline: none;
-    border: none;
-    background: transparent;
   }
   &__button-contacts--wrapper svg path {
     transition: all ease-in-out 0.6s;
@@ -161,7 +157,7 @@
     border-radius: 6px;
     background-color: #0000000d;
   }
-  &__select{
+  &__select {
     outline: none;
     border: none;
     padding: 11px 12px;
@@ -172,19 +168,19 @@
     border-radius: 6px;
     background-color: #0000000d;
   }
-  &__select option{
+  &__select option {
     border: none;
     outline: none;
   }
-  &__input::placeholder{
+  &__input::placeholder {
     // распознать цвет
     color: #00000050;
   }
-  &__category-message{
+  &__category-message {
     background-color: transparent;
     text-align: center;
   }
-  &__category-name{
+  &__category-name {
     display: block;
     width: 100%;
     margin-right: 12px;
@@ -199,94 +195,99 @@
     outline: none;
     border: none;
   }
-  &__category-name::placeholder{
+  &__category-name::placeholder {
     color: #00000050;
   }
 }
 
-.info{
-  height: 100%;
+/* Основные стили для аккордеона */
+.accordion {
   width: 100%;
-  &__wrapper{
-    margin-top: 126px;
-    margin-bottom: 56px;
-    overflow-y: auto;
-    height: calc(100vh - 200px);
-  }
-  &__categories{
-    padding: 24px 24px 0 24px;
-    background-color: #fff;
-    border-radius: 6px;
-    
-  }
-  &__categories + .info__categories{
+  border-radius: 6px;
+  margin-top: 126px;
+  &-item + .accordion-item {
     margin-top: 24px;
   }
-  // &__categories .info__category-name{
-  //   display: flex;
-  //   align-items:start;
-  //   justify-content: space-between;
-  //   border-bottom: 1px solid #0000000d;
-  // }
-  
-  // &__categories .info__category-name p{
-  //   font-size: 18px;
-  //   font-weight: 1.5;
-  //   color: #005BFE;
-  //   font-weight: 700;
-  //   padding-bottom: 24px;
-  // }
-  &__categories img{
-    width: 12px;
-    height: 8px;
+  &__button {
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
   }
-  &__categories .info__users{
-    border-bottom: 1px solid #0000000d;
-  }
-  &__categories .info__users:last-child{
-    border: none;
-  }
-  &__users,
-  &__category-name{
-    display: flex;
-    align-items: center;
-  }
-  &__title{
-    padding-top: 24px;
-    padding-bottom: 24px;
+  &-header {
+    background-color: #fff;
+    text-align: left;
+    padding: 24px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-size: 18px;
+    font-weight: 700;
+    line-height: 1.16;
+    color: #000000;
+    transition: all ease 0.4s;
+  }
+  &-header .accordion__button {
+    transition: all ease 0.4s;
+  }
+  &-header.active {
+    color: #005bfe;
+  }
+  &-header.active .accordion__button {
+    transform: rotate(180deg);
+  }
+  &-content {
+    max-height: 0;
+    overflow: hidden;
+    background-color: #fff;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    transition: max-height 0.2s ease-out;
+  }
+  &-content .accordion__info-content {
+    padding: 24px 0;
+    margin: 0 24px;
+  }
+  &__info-content {
+    border-top: 1px solid #0000000d;
+  }
+  &__content-wrapper {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
     font-weight: 400;
     line-height: 1.16;
     color: #00000050;
   }
-  &__title span{
+  &__content-wrapper span {
     font-size: 18px;
     font-weight: 400;
     line-height: 1.16;
     color: #000000;
   }
-  &__edit-button{
+  &__content-wrapper p {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  &__edit-button {
     margin-left: 24px;
     cursor: pointer;
   }
-  &__delete-button{
+  &__delete-button {
     margin-left: 10px;
     cursor: pointer;
   }
   &__edit-button,
-  &__edit-button rect{
+  &__edit-button rect {
     transition: all ease 0.3s;
   }
-  &__edit-button:hover rect{
+  &__edit-button:hover rect {
     opacity: 1;
     stroke: transparent;
-    fill: #005BFE;
+    fill: #005bfe;
   }
-  &__edit-button:hover g path{
+  &__edit-button:hover g path {
     fill: white;
     opacity: 1;
   }
@@ -299,22 +300,6 @@
     fill: #fff;
     opacity: 1;
   }
-
-  
-  &__users{
-    height: 0;
-    opacity: 0;
-    visibility: hidden;
-  }
-  &__categories.active .info__users{
-    height: auto;
-    opacity: 1;
-    visibility: visible;
-  }
- 
 }
-
-
-
 
 @import 'media';

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /** @format */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 html {
@@ -140,6 +141,7 @@ body {
   flex-direction: column;
   min-height: 100vh;
   position: relative;
+  margin-bottom: 56px;
 }
 
 .header {
@@ -159,11 +161,6 @@ body {
 .header__button-contacts--wrapper, .header__person-wrapper {
   display: flex;
   align-items: center;
-}
-.header__button-contacts--wrapper {
-  outline: none;
-  border: none;
-  background: transparent;
 }
 .header__button-contacts--wrapper svg path {
   transition: all ease-in-out 0.6s;
@@ -338,92 +335,103 @@ body {
   color: rgba(0, 0, 0, 0.3137254902);
 }
 
-.info {
-  height: 100%;
+/* Основные стили для аккордеона */
+.accordion {
   width: 100%;
-}
-.info__wrapper {
-  margin-top: 126px;
-  margin-bottom: 56px;
-  overflow-y: auto;
-  height: calc(100vh - 200px);
-}
-.info__categories {
-  padding: 24px 24px 0 24px;
-  background-color: #fff;
   border-radius: 6px;
+  margin-top: 126px;
 }
-.info__categories + .info__categories {
+.accordion-item + .accordion-item {
   margin-top: 24px;
 }
-.info__categories img {
-  width: 12px;
-  height: 8px;
+.accordion__button {
+  height: 24px;
+  width: 24px;
+  cursor: pointer;
 }
-.info__categories .info__users {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.0509803922);
-}
-.info__categories .info__users:last-child {
-  border: none;
-}
-.info__users, .info__category-name {
-  display: flex;
-  align-items: center;
-}
-.info__title {
-  padding-top: 24px;
-  padding-bottom: 24px;
+.accordion-header {
+  background-color: #fff;
+  text-align: left;
+  padding: 24px;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 18px;
+  font-weight: 700;
+  line-height: 1.16;
+  color: #000000;
+  transition: all ease 0.4s;
+}
+.accordion-header .accordion__button {
+  transition: all ease 0.4s;
+}
+.accordion-header.active {
+  color: #005bfe;
+}
+.accordion-header.active .accordion__button {
+  transform: rotate(180deg);
+}
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  background-color: #fff;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  transition: max-height 0.2s ease-out;
+}
+.accordion-content .accordion__info-content {
+  padding: 24px 0;
+  margin: 0 24px;
+}
+.accordion__info-content {
+  border-top: 1px solid rgba(0, 0, 0, 0.0509803922);
+}
+.accordion__content-wrapper {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
   font-weight: 400;
   line-height: 1.16;
   color: rgba(0, 0, 0, 0.3137254902);
 }
-.info__title span {
+.accordion__content-wrapper span {
   font-size: 18px;
   font-weight: 400;
   line-height: 1.16;
   color: #000000;
 }
-.info__edit-button {
+.accordion__content-wrapper p {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.accordion__edit-button {
   margin-left: 24px;
   cursor: pointer;
 }
-.info__delete-button {
+.accordion__delete-button {
   margin-left: 10px;
   cursor: pointer;
 }
-.info__edit-button, .info__edit-button rect {
+.accordion__edit-button, .accordion__edit-button rect {
   transition: all ease 0.3s;
 }
-.info__edit-button:hover rect {
+.accordion__edit-button:hover rect {
   opacity: 1;
   stroke: transparent;
-  fill: #005BFE;
+  fill: #005bfe;
 }
-.info__edit-button:hover g path {
+.accordion__edit-button:hover g path {
   fill: white;
   opacity: 1;
 }
-.info__delete-button:hover rect {
+.accordion__delete-button:hover rect {
   fill: #ea3d2f;
   opacity: 1;
   stroke: #ea3d2f;
 }
-.info__delete-button:hover g path {
+.accordion__delete-button:hover g path {
   fill: #fff;
   opacity: 1;
-}
-.info__users {
-  height: 0;
-  opacity: 0;
-  visibility: hidden;
-}
-.info__categories.active .info__users {
-  height: auto;
-  opacity: 1;
-  visibility: visible;
 }/*# sourceMappingURL=style.css.map */
