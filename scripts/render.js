@@ -1,22 +1,27 @@
 /** @format */
-import LocalStorageUtil from './storage.js';
-import openAsideUsers from './main.js'
-const categoriesList = document.getElementById('categories__list');
-const categoriesListUser = document.getElementById('profileCategory');
-const accordion = document.querySelector('.accordion');
+import LocalStorageUtil from "./storage.js";
+const categoriesList = document.getElementById("categories__list");
+const categoriesListUser = document.getElementById("profileCategory");
+const accordion = document.querySelector(".accordion");
+const personData = document.getElementById("profileData");
+const personPhone = document.getElementById("profilePhone");
+const personCategory = document.getElementById("profileCategory");
+const savePerson = document.getElementById("save__person");
+let createdUser = {};
 
 // Рендеринг категорий
 const renderCategory = (categories = []) => {
-  if(categories.length === 0) categories = LocalStorageUtil.getItem('categories');
-  if (document.querySelectorAll('.aside__category-inner')) {
-    document.querySelectorAll('.aside__category-inner').forEach((element) => {
+  if (categories.length === 0)
+    categories = LocalStorageUtil.getItem("categories");
+  if (document.querySelectorAll(".aside__category-inner")) {
+    document.querySelectorAll(".aside__category-inner").forEach((element) => {
       element.remove();
     });
   }
   if (categories) {
     categories.forEach((category) => {
       categoriesList.insertAdjacentHTML(
-        'beforeend',
+        "beforeend",
         `<div class="aside__category-inner" data-parent-id='${category.id}'>
                   <input class="aside__category-name" value='${category.category}' readonly placeholder='Введите название'>
                   <svg
@@ -58,53 +63,63 @@ const renderCategory = (categories = []) => {
                 </div>`
       );
     });
-    document.querySelectorAll('.aside__category-delete').forEach(eachElement =>
-      (eachElement.onclick = () => {
-        deleteCategory(eachElement, categories);
-      })
+    document.querySelectorAll(".aside__category-delete").forEach(
+      (eachElement) =>
+        (eachElement.onclick = () => {
+          deleteCategory(eachElement, categories);
+        })
     );
   }
 };
 
-
 const renderCategoryForUser = () => {
-  const categories = LocalStorageUtil.getItem('categories');
-  if (document.querySelectorAll('.aside__option')) {
-    document.querySelectorAll('.aside__option').forEach((element) => {
+  const categories = LocalStorageUtil.getItem("categories");
+  if (document.querySelectorAll(".aside__option")) {
+    document.querySelectorAll(".aside__option").forEach((element) => {
       element.remove();
     });
   }
-  categoriesListUser.insertAdjacentHTML('beforeend', `<option class="aside__option" value="none" selected disabled hidden>Выберите группу</option>`);
+  categoriesListUser.insertAdjacentHTML(
+    "beforeend",
+    `<option class="aside__option" value="undefined" selected disabled hidden>Выберите группу</option>`
+  );
   if (categories) {
     categories.forEach((category) => {
-      categoriesListUser.insertAdjacentHTML('beforeend', `<option class="aside__option" value="${category.id}">${category.category}</option>`);
+      categoriesListUser.insertAdjacentHTML(
+        "beforeend",
+        `<option class="aside__option" value="${category.id}">${category.category}</option>`
+      );
     });
   }
 };
 
 const renderAllUsers = () => {
-  const users = LocalStorageUtil.getItem('users');
-  const categories = LocalStorageUtil.getItem('categories');
-  if (document.querySelectorAll('.accordion-item')) {
-    document.querySelectorAll('.accordion-item').forEach((element) => {
+  const users = LocalStorageUtil.getItem("users");
+  const categories = LocalStorageUtil.getItem("categories");
+  if(document.querySelector('.accordion-message')){
+    document.querySelector('.accordion-message').remove();
+  }
+  if (document.querySelectorAll(".accordion-item")) {
+    document.querySelectorAll(".accordion-item").forEach((element) => {
       element.remove();
     });
   }
-  categories.forEach((category) => {
-    accordion.insertAdjacentHTML(
-      'beforeend',
-      `<div class="accordion-item">
-      <div class="accordion-header">${category.category}<img class="accordion__button" src="images/icons/Keyboard arrow right.png" alt="rect" /></div>
+  if (users.length > 0) {
+    categories.forEach((category) => {
+      accordion.insertAdjacentHTML(
+        "beforeend",
+        `<div class="accordion-item">
+      <div class="accordion-header">${category.category}<button class="accordion__button"></button></div>
       <div class="accordion-content"></div></div>`
-    );
-  });
-  const accordionContainer = document.querySelectorAll('.accordion-content');
-  categories.forEach((category, index) => {
-    const filteredUsers = filterUsersByCategory(users, category);
-    filteredUsers.forEach((user) => {
-      accordionContainer[index].insertAdjacentHTML(
-        'beforeend',
-        `<div class="accordion__info-content" data-user-id=${user.id}>
+      );
+    });
+    const accordionContainer = document.querySelectorAll(".accordion-content");
+    categories.forEach((category, index) => {
+      const filteredUsers = filterUsersByCategory(users, category);
+      filteredUsers.forEach((user) => {
+        accordionContainer[index].insertAdjacentHTML(
+          "beforeend",
+          `<div class="accordion__info-content" data-user-id=${user.id}>
                 <div class="accordion__content-wrapper">
                   <p>${user.fullName}<span>${user.phone}</span></p>
                     <svg
@@ -181,75 +196,186 @@ const renderAllUsers = () => {
                     </svg>
                   </div>
               </div>`
-      );
-    });
-    document.querySelectorAll('.accordion__edit-button').forEach((button) => {
-      button.onclick = () => {
-        editUser(button.getAttribute('data-edit-id'));
-      };
-    });
+        );
+      });
 
-    document.querySelectorAll('.accordion__delete-button').forEach((button) => {
-      button.onclick = () => {
-        deleteUser(button.getAttribute('data-delete-id'), users);
-      };
-    });
+      checkCategories();
+      document.querySelectorAll(".accordion__edit-button").forEach((button) => {
+        button.onclick = () => {
+          const selectedId = Number(button.getAttribute("data-edit-id"));
+          const selectedUser = users.find((user) => user.id === selectedId);
+          openAsideUsers(selectedUser);
+        };
+      });
 
-    const headers = document.querySelectorAll('.accordion-header');
-    headers.forEach((header) => {
-      header.onclick = (event) => {
-        if (event.target.classList.contains('accordion__button')) {
-          const content = header.nextElementSibling;
-          if (content.style.maxHeight) {
-            content.style.maxHeight = null;
-            header.classList.remove('active');
-          } else {
-            document.querySelectorAll('.accordion-content').forEach((item) => {
-              item.style.maxHeight = null;
-            });
-            content.style.maxHeight = content.scrollHeight + 'px';
-            header.classList.add('active');
+      document
+        .querySelectorAll(".accordion__delete-button")
+        .forEach((button) => {
+          button.onclick = () => {
+            deleteUser(button.getAttribute("data-delete-id"), users);
+          };
+        });
+
+      const headers = document.querySelectorAll(".accordion-header");
+      headers.forEach((header) => {
+        header.onclick = (event) => {
+          if (event.target.classList.contains("accordion__button")) {
+            const content = header.nextElementSibling;
+            if (content.style.maxHeight) {
+              content.style.maxHeight = null;
+              header.classList.remove("active");
+            } else {
+              document
+                .querySelectorAll(".accordion-content")
+                .forEach((item) => {
+                  item.style.maxHeight = null;
+                });
+              content.style.maxHeight = content.scrollHeight + "px";
+              header.classList.add("active");
+            }
           }
-        }
-      };
+        };
+      });
     });
-  });
-}
+  } else {
+    accordion.insertAdjacentHTML(
+      "beforeend",
+      `<div class="accordion-message">Список контактов пуст</div>`
+    );
+  }
+};
 
-function editUser(id) {
-  console.log(id);
-  openAsideUsers()
-}
+const checkCategories = () => {
+  if (document.querySelectorAll(".accordion-content").length > 0) {
+    document
+      .querySelectorAll(".accordion-content")
+      .forEach((element, index) => {
+        if (!element.hasChildNodes()) {
+          document.querySelectorAll(".accordion__button")[
+            index
+          ].disabled = true;
+          document
+            .querySelectorAll(".accordion__button")
+            [index].classList.add("empty");
+        } else {
+          document.querySelectorAll(".accordion__button")[
+            index
+          ].disabled = false;
+          document
+            .querySelectorAll(".accordion__button")
+            [index].classList.remove("empty");
+        }
+      });
+  }
+};
 
 const deleteUser = (id, users) => {
   document.querySelector(`[data-user-id="${id}"]`).remove();
-  const filteredArray = filterUsersById(users, id)
-  LocalStorageUtil.setItem('users', filteredArray);
+  const filteredArray = filterUsersById(users, id);
+  LocalStorageUtil.setItem("users", filteredArray);
   renderAllUsers();
-}
+};
 
 const deleteCategory = (element, categories) => {
-  const idToRemove = Number(element.getAttribute('data-id'));
+  const idToRemove = Number(element.getAttribute("data-id"));
   document.querySelector(`[data-parent-id="${idToRemove}"]`).remove();
   const filteredArray = categories.filter((item) => item.id !== idToRemove);
-  LocalStorageUtil.setItem('categories', filteredArray);
-  sortUsersByDeletedCategory(idToRemove)
+  LocalStorageUtil.setItem("categories", filteredArray);
+  sortUsersByDeletedCategory(idToRemove);
   renderCategory();
-}
+};
 
 // Удаление пользователей по удаляемой категории
 const sortUsersByDeletedCategory = (idToRemove) => {
-  const users = LocalStorageUtil.getItem('users');
-  const newUsers = users.filter(item => Number(item.category) !== idToRemove);
-  LocalStorageUtil.setItem('users', newUsers)
+  const users = LocalStorageUtil.getItem("users");
+  const newUsers = users.filter((item) => Number(item.category) !== idToRemove);
+  LocalStorageUtil.setItem("users", newUsers);
+};
+
+function filterUsersById(users, id) {
+  return users.filter((item) => item.id !== Number(id));
 }
 
-function filterUsersById(users, id){
-  return filteredArray = users.filter((item) => item.id !== Number(id));
-}
-
-function filterUsersByCategory(users, category){
+function filterUsersByCategory(users, category) {
   return users.filter((item) => item.category == category.id);
 }
 
-export { renderCategory, renderCategoryForUser, renderAllUsers };
+const openAsideUsers = (user = {}) => {
+  renderCategoryForUser();
+  document.getElementById("aside__add-user").classList.add("active");
+  cleanInputFormUser(user);
+};
+
+// Функция заполнения\очистки формы пользователя
+function cleanInputFormUser(user) {
+  if (JSON.stringify(user) === "{}") {
+    console.log("empty");
+    user = {
+      fullName: "",
+      phone: "",
+      category: undefined,
+    };
+  } else {
+    createdUser = user;
+  }
+  document.getElementById("profileData").value = user.fullName;
+  document.getElementById("profilePhone").value = user.phone;
+  document.getElementById("profileCategory").value = user.category;
+  createUser(user);
+}
+
+function createUser(user) {
+  // Контроль ввода данных для регистрации пользователя
+  personPhone.addEventListener("input", function (e) {
+    let phone = e.target.value.replace(/\D/g, "");
+    createdUser.phone = phone;
+    e.target.value = phone;
+  });
+  personData.addEventListener("input", () => {
+    createdUser.fullName = personData.value;
+  });
+  personCategory.addEventListener("change", (event) => {
+    createdUser.category = event.target.value;
+  });
+
+  savePerson.onclick = function () {
+    const usersArray = LocalStorageUtil.getItem("users");
+    if (
+      createdUser.fullName &&
+      createdUser.fullName.trim().split(/\s+/).length >= 3 &&
+      createdUser.phone.length === 6 &&
+      createdUser.category !== ""
+    ) {
+      if (!createdUser.hasOwnProperty("id")) {
+        console.log("no id");
+        let lastId = 0;
+        if (usersArray.length > 0) {
+          console.log("here");
+          lastId = usersArray.at(-1).id + 1;
+        }
+        createdUser.id = lastId;
+      }
+    }
+    // Проверяем, существует ли пользователь с данным id
+    if (
+      !usersArray.some((user) => Number(user.id) === Number(createdUser.id))
+    ) {
+      LocalStorageUtil.setItem("users", [...usersArray, createdUser]);
+    } else {
+      // Если объект с таким id уже существует:
+      const index = usersArray.findIndex((item) => item.id === createdUser.id);
+      const updatedArray = [...usersArray];
+      updatedArray[index] = createdUser;
+      LocalStorageUtil.setItem("users", updatedArray);
+    }
+    createdUser = {};
+    closeAside(1);
+  };
+}
+
+const closeAside = (index) => {
+  document.querySelectorAll(".aside")[index].classList.remove("active");
+  renderAllUsers();
+};
+
+export { renderCategory, renderAllUsers, openAsideUsers, closeAside };
