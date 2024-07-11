@@ -3,7 +3,7 @@ import { renderCategory, renderAllUsers, renderCategoryForUser } from './render.
 
 const personData = document.getElementById('profileData');
 const personPhone = document.getElementById('profilePhone');
-const personCategory = document.getElementById('profileCategory');
+const personCategory = document.querySelector('.aside__input-hidden');
 const savePerson = document.getElementById('save__person');
 const addCategoryButton = document.getElementById('add__category');
 const saveCategoryButton = document.getElementById('save__category');
@@ -68,18 +68,22 @@ const openAsideUsers = (user = {}) => {
 
 // Функция заполнения\очистки формы пользователя
 function cleanInputFormUser(user) {
+  let categoryName = 'Выберите группу';
   if (JSON.stringify(user) === '{}') {
     user = {
       fullName: '',
       phone: '',
-      category: undefined,
+      category: '',
     };
   } else {
+    const categories = LocalStorageUtil.getItem('categories');
+    categoryName = categories.find(cat => cat.id === Number(user.category)).category;
     createdUser = user;
   }
   document.getElementById('profileData').value = user.fullName;
   document.getElementById('profilePhone').value = user.phone;
-  document.getElementById('profileCategory').value = user.category;
+  document.getElementById('profileCategory').innerText = categoryName;
+  document.querySelector('.aside__input-hidden').value = user.category;
   createUser();
 }
 
@@ -142,11 +146,9 @@ function createUser() {
   personData.addEventListener('input', () => {
     createdUser.fullName = personData.value;
   });
-  personCategory.addEventListener('change', (event) => {
-    createdUser.category = event.target.value;
-  });
 
   savePerson.onclick = function () {
+    createdUser.category = personCategory.value;
     const usersArray = LocalStorageUtil.getItem('users');
     if (createdUser.fullName && createdUser.fullName.trim().split(/\s+/).length >= 3 && createdUser.phone.length === 18 && createdUser.category !== '') {
       if (!createdUser.hasOwnProperty('id')) {
@@ -156,19 +158,19 @@ function createUser() {
         }
         createdUser.id = lastId;
       }
+      // Проверяем, существует ли пользователь с данным id
+      if (!usersArray.some((user) => Number(user.id) === Number(createdUser.id))) {
+        LocalStorageUtil.setItem('users', [...usersArray, createdUser]);
+      } else {
+        // Если объект с таким id уже существует:
+        const index = usersArray.findIndex((item) => item.id === createdUser.id);
+        const updatedArray = [...usersArray];
+        updatedArray[index] = createdUser;
+        LocalStorageUtil.setItem('users', updatedArray);
+      }
+      createdUser = {};
+      closeAside(1);
     }
-    // Проверяем, существует ли пользователь с данным id
-    if (!usersArray.some((user) => Number(user.id) === Number(createdUser.id))) {
-      LocalStorageUtil.setItem('users', [...usersArray, createdUser]);
-    } else {
-      // Если объект с таким id уже существует:
-      const index = usersArray.findIndex((item) => item.id === createdUser.id);
-      const updatedArray = [...usersArray];
-      updatedArray[index] = createdUser;
-      LocalStorageUtil.setItem('users', updatedArray);
-    }
-    createdUser = {};
-    closeAside(1);
   };
 }
 

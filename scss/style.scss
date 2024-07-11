@@ -77,6 +77,9 @@
     opacity: 1;
     visibility: visible;
   }
+  &__option {
+    white-space: nowrap;
+  }
   &__wrapper {
     background-color: #fff;
     position: absolute;
@@ -112,7 +115,7 @@
     flex: 1 0 auto;
     padding: 23px 24px 24px;
   }
-  &__categories-list--wrapper{
+  &__categories-list--wrapper {
     height: calc(100vh - 200px);
     overflow-y: auto;
   }
@@ -162,9 +165,9 @@
     border-radius: 6px;
     background-color: #0000000d;
   }
-  &__input:focus{
-    outline: none;
-    box-shadow: 0px 0px 3px #7e9bbd;
+  // ============================
+  &__dropdown {
+    position: relative;
   }
   &__select {
     outline: none;
@@ -183,35 +186,59 @@
     -webkit-appearance: none;
     appearance: none;
     cursor: pointer;
-  }
-  &__select::-ms-expand {
-    display: none;
-  } 
-  &__select:focus{
-    outline: none;
-    box-shadow: 0px 0px 3px #7e9bbd;
-  }
-  
-
-  &__select-wrapper{
+    text-align: left;
     position: relative;
   }
-  &__select-wrapper::after{
+  &__select::before {
     content: '';
     position: absolute;
     top: 50%;
     right: 12px;
     height: 24px;
     width: 24px;
-    transform: translateY(-50%);
+    transform: translateY(-50%) rotate(0deg);
     display: block;
     pointer-events: none;
     background-image: url('../images/icons/Keyboard\ arrow\ right.png');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+    transition: all ease 0.4s;
   }
-
+  &__select.active::before {
+    transform: translateY(-50%) rotate(180deg);
+  }
+  &__list {
+    display: none;
+    overflow: hidden;
+    background-color: #0000000d;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    width: 100%;
+    left: 0;
+    top: 38px;
+    position: absolute;
+    z-index: 10;
+  }
+  &__list.visible {
+    display: block;
+  }
+  &__list-item {
+    padding: 11px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.14;
+    color: #00000050;
+    cursor: pointer;
+    transition: all ease 0.4s;
+  }
+  &__list-item:hover {
+    background-color: #005bfe50;
+  }
+  &__input-hidden {
+    display: none;
+  }
+  // ===========================
   &__input::placeholder {
     color: #00000050;
   }
@@ -242,7 +269,7 @@
 .accordion {
   width: 100%;
   border-radius: 6px;
-  &__container{
+  &__container {
     margin-top: 126px;
     height: calc(100vh - 200px);
     overflow-y: auto;
@@ -259,7 +286,7 @@
   &__button.empty {
     cursor: default;
   }
-  &__button::after{
+  &__button::after {
     content: '';
     position: absolute;
     top: 0;
@@ -318,7 +345,7 @@
     line-height: 1.16;
     color: #00000050;
   }
-  &-message{
+  &-message {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -373,27 +400,27 @@
   }
 }
 
-
 .aside__categories-list--wrapper::-webkit-scrollbar,
 .accordion__container::-webkit-scrollbar {
-  width: 6px; 
-  height: 12px; 
+  width: 6px;
+  height: 12px;
 }
 
 .aside__categories-list--wrapper::-webkit-scrollbar-thumb,
 .accordion__container::-webkit-scrollbar-thumb {
   background-color: #888;
-  border-radius: 3px; 
+  border-radius: 3px;
 }
 .aside__categories-list--wrapper::-webkit-scrollbar-thumb:hover,
 .accordion__container::-webkit-scrollbar-thumb:hover {
-  background-color: #555; 
+  background-color: #555;
 }
 .aside__categories-list--wrapper::-webkit-scrollbar-track,
 .accordion__container::-webkit-scrollbar-track {
-  background-color: #f1f1f1; 
+  background-color: #f1f1f1;
   border-radius: 3px;
 }
+
 
 
 @import 'media';

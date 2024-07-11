@@ -82,11 +82,12 @@
             <form class="aside__form">
               <input class="aside__input" type="text" placeholder="Введите ФИО" id="profileData" />
               <input class="aside__input" type="text" placeholder="Введите номер" id="profilePhone" />
-              <div class="aside__select-wrapper">
-                <select class="aside__select" id="profileCategory"></select>
+              <div class="aside__dropdown">
+                <button class="aside__select" id="profileCategory"></button>
+                <ul class="aside__list"></ul>
+                <input class="aside__input-hidden" type="text" name="select-category" value="" />
               </div>
             </form>
-
           </div>
           <div class="aside__buttons-wrapper">
             <button class="button blue__button" id="save__person">Сохранить</button>
@@ -97,7 +98,6 @@
         <div class="container">
           <div class="accordion__container">
             <div class="accordion"></div>
-
           </div>
         </div>
       </section>

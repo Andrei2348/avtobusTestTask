@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
   LocalStorageUtil.hasItem('categories');
   LocalStorageUtil.hasItem('users');
   renderAllUsers();
-  console.log(LocalStorageUtil.getItem('users'));
 
   // Открытие и закрытие aside
   categoriesList.onclick = function () {

@@ -1,9 +1,9 @@
 /** @format */
 import LocalStorageUtil from './storage.js';
-import { checkCategories, deleteUser, deleteCategory, filterUsersByCategory, openAsideUsers } from './services.js';
+import { checkCategories, deleteUser, deleteCategory, filterUsersByCategory, openAsideUsers, closeCategories } from './services.js';
 
 const categoriesList = document.getElementById('categories__list');
-const categoriesListUser = document.getElementById('profileCategory');
+const categoriesListUser = document.querySelector('.aside__list');
 const accordion = document.querySelector('.accordion');
 
 // Рендеринг категорий
@@ -70,16 +70,45 @@ const renderCategory = (categories = []) => {
 
 const renderCategoryForUser = () => {
   const categories = LocalStorageUtil.getItem('categories');
-  if (document.querySelectorAll('.aside__option')) {
-    document.querySelectorAll('.aside__option').forEach((element) => {
+  if (document.querySelectorAll('.aside__list-item')) {
+    document.querySelectorAll('.aside__list-item').forEach((element) => {
       element.remove();
     });
   }
-  categoriesListUser.insertAdjacentHTML('beforeend', `<option class="aside__option" value="undefined" selected disabled hidden>Выберите группу</option>`);
   if (categories) {
+    console.log(categories)
     categories.forEach((category) => {
-      categoriesListUser.insertAdjacentHTML('beforeend', `<option class="aside__option" value="${category.id}">${category.category}</option>`);
+      categoriesListUser.insertAdjacentHTML('beforeend', `<li class="aside__list-item" data-catid=${category.id}>${category.category}</li>`);
     });
+
+    const categoryButton = document.querySelector('.aside__select');
+    const categoryValue = document.querySelectorAll('.aside__list-item');
+    const categoryContainer = document.querySelector('.aside__list');
+    categoryButton.onclick = function(event) {
+      event.preventDefault();
+      categoryContainer.classList.toggle('visible');
+      categoryButton.classList.toggle('active');
+    }
+    categoryValue.forEach(element => {
+      element.onclick = function(event) {
+        event.stopPropagation();
+        categoryButton.innerText = this.innerText;
+        document.querySelector('.aside__input-hidden').value = this.dataset.catid;
+        categoryContainer.classList.remove('visible');
+      }
+    })
+    document.onclick = function(event){
+      if(event.target !== categoryButton){
+        categoryContainer.classList.remove('visible');
+        categoryButton.classList.remove('active');
+      }
+    }
+    document.addEventListener('keydown', function(event){
+      if(event.key === 'Escape'){
+        categoryContainer.classList.remove('visible');
+        categoryButton.classList.remove('active');
+      }
+    })
   }
 };
 
@@ -195,6 +224,7 @@ const renderAllUsers = () => {
           const selectedId = Number(button.getAttribute('data-edit-id'));
           const selectedUser = users.find((user) => user.id === selectedId);
           openAsideUsers(selectedUser);
+          closeCategories();
         };
       });
 

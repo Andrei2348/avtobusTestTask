@@ -185,6 +185,9 @@ body {
   opacity: 1;
   visibility: visible;
 }
+.aside__option {
+  white-space: nowrap;
+}
 .aside__wrapper {
   background-color: #fff;
   position: absolute;
@@ -269,9 +272,8 @@ body {
   border-radius: 6px;
   background-color: rgba(0, 0, 0, 0.0509803922);
 }
-.aside__input:focus {
-  outline: none;
-  box-shadow: 0px 0px 3px #7e9bbd;
+.aside__dropdown {
+  position: relative;
 }
 .aside__select {
   outline: none;
@@ -290,31 +292,57 @@ body {
   -webkit-appearance: none;
   appearance: none;
   cursor: pointer;
-}
-.aside__select::-ms-expand {
-  display: none;
-}
-.aside__select:focus {
-  outline: none;
-  box-shadow: 0px 0px 3px #7e9bbd;
-}
-.aside__select-wrapper {
+  text-align: left;
   position: relative;
 }
-.aside__select-wrapper::after {
+.aside__select::before {
   content: "";
   position: absolute;
   top: 50%;
   right: 12px;
   height: 24px;
   width: 24px;
-  transform: translateY(-50%);
+  transform: translateY(-50%) rotate(0deg);
   display: block;
   pointer-events: none;
   background-image: url("../images/icons/Keyboard arrow right.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+  transition: all ease 0.4s;
+}
+.aside__select.active::before {
+  transform: translateY(-50%) rotate(180deg);
+}
+.aside__list {
+  display: none;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.0509803922);
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  width: 100%;
+  left: 0;
+  top: 38px;
+  position: absolute;
+  z-index: 10;
+}
+.aside__list.visible {
+  display: block;
+}
+.aside__list-item {
+  padding: 11px 12px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.14;
+  color: rgba(0, 0, 0, 0.3137254902);
+  cursor: pointer;
+  transition: all ease 0.4s;
+}
+.aside__list-item:hover {
+  background-color: rgba(0, 91, 254, 0.3137254902);
+}
+.aside__input-hidden {
+  display: none;
 }
 .aside__input::-moz-placeholder {
   color: rgba(0, 0, 0, 0.3137254902);
