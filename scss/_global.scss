@@ -22,7 +22,7 @@ body {
   font-weight: 400;
   font-size: 14px;
   min-width: 320px;
-  overflow-x: hidden;
+  overflow: hidden;
   background-color: #f6f7f9;
 }
 
@@ -59,7 +59,7 @@ body {
   height: 100%;
 }
 .container {
-  max-width: 1460px;
+  max-width: 1180px;
   width: 100%;
   margin: 0 auto;
   padding: 0 10px;

@@ -1,27 +1,23 @@
 /** @format */
-import LocalStorageUtil from "./storage.js";
-const categoriesList = document.getElementById("categories__list");
-const categoriesListUser = document.getElementById("profileCategory");
-const accordion = document.querySelector(".accordion");
-const personData = document.getElementById("profileData");
-const personPhone = document.getElementById("profilePhone");
-const personCategory = document.getElementById("profileCategory");
-const savePerson = document.getElementById("save__person");
-let createdUser = {};
+import LocalStorageUtil from './storage.js';
+import { checkCategories, deleteUser, deleteCategory, filterUsersByCategory, openAsideUsers } from './services.js';
+
+const categoriesList = document.getElementById('categories__list');
+const categoriesListUser = document.getElementById('profileCategory');
+const accordion = document.querySelector('.accordion');
 
 // Рендеринг категорий
 const renderCategory = (categories = []) => {
-  if (categories.length === 0)
-    categories = LocalStorageUtil.getItem("categories");
-  if (document.querySelectorAll(".aside__category-inner")) {
-    document.querySelectorAll(".aside__category-inner").forEach((element) => {
+  if (categories.length === 0) categories = LocalStorageUtil.getItem('categories');
+  if (document.querySelectorAll('.aside__category-inner')) {
+    document.querySelectorAll('.aside__category-inner').forEach((element) => {
       element.remove();
     });
   }
   if (categories) {
     categories.forEach((category) => {
       categoriesList.insertAdjacentHTML(
-        "beforeend",
+        'beforeend',
         `<div class="aside__category-inner" data-parent-id='${category.id}'>
                   <input class="aside__category-name" value='${category.category}' readonly placeholder='Введите название'>
                   <svg
@@ -63,7 +59,7 @@ const renderCategory = (categories = []) => {
                 </div>`
       );
     });
-    document.querySelectorAll(".aside__category-delete").forEach(
+    document.querySelectorAll('.aside__category-delete').forEach(
       (eachElement) =>
         (eachElement.onclick = () => {
           deleteCategory(eachElement, categories);
@@ -73,52 +69,46 @@ const renderCategory = (categories = []) => {
 };
 
 const renderCategoryForUser = () => {
-  const categories = LocalStorageUtil.getItem("categories");
-  if (document.querySelectorAll(".aside__option")) {
-    document.querySelectorAll(".aside__option").forEach((element) => {
+  const categories = LocalStorageUtil.getItem('categories');
+  if (document.querySelectorAll('.aside__option')) {
+    document.querySelectorAll('.aside__option').forEach((element) => {
       element.remove();
     });
   }
-  categoriesListUser.insertAdjacentHTML(
-    "beforeend",
-    `<option class="aside__option" value="undefined" selected disabled hidden>Выберите группу</option>`
-  );
+  categoriesListUser.insertAdjacentHTML('beforeend', `<option class="aside__option" value="undefined" selected disabled hidden>Выберите группу</option>`);
   if (categories) {
     categories.forEach((category) => {
-      categoriesListUser.insertAdjacentHTML(
-        "beforeend",
-        `<option class="aside__option" value="${category.id}">${category.category}</option>`
-      );
+      categoriesListUser.insertAdjacentHTML('beforeend', `<option class="aside__option" value="${category.id}">${category.category}</option>`);
     });
   }
 };
 
 const renderAllUsers = () => {
-  const users = LocalStorageUtil.getItem("users");
-  const categories = LocalStorageUtil.getItem("categories");
-  if(document.querySelector('.accordion-message')){
+  const users = LocalStorageUtil.getItem('users');
+  const categories = LocalStorageUtil.getItem('categories');
+  if (document.querySelector('.accordion-message')) {
     document.querySelector('.accordion-message').remove();
   }
-  if (document.querySelectorAll(".accordion-item")) {
-    document.querySelectorAll(".accordion-item").forEach((element) => {
+  if (document.querySelectorAll('.accordion-item')) {
+    document.querySelectorAll('.accordion-item').forEach((element) => {
       element.remove();
     });
   }
   if (users.length > 0) {
     categories.forEach((category) => {
       accordion.insertAdjacentHTML(
-        "beforeend",
+        'beforeend',
         `<div class="accordion-item">
       <div class="accordion-header">${category.category}<button class="accordion__button"></button></div>
       <div class="accordion-content"></div></div>`
       );
     });
-    const accordionContainer = document.querySelectorAll(".accordion-content");
+    const accordionContainer = document.querySelectorAll('.accordion-content');
     categories.forEach((category, index) => {
       const filteredUsers = filterUsersByCategory(users, category);
       filteredUsers.forEach((user) => {
         accordionContainer[index].insertAdjacentHTML(
-          "beforeend",
+          'beforeend',
           `<div class="accordion__info-content" data-user-id=${user.id}>
                 <div class="accordion__content-wrapper">
                   <p>${user.fullName}<span>${user.phone}</span></p>
@@ -200,231 +190,42 @@ const renderAllUsers = () => {
       });
 
       checkCategories();
-      document.querySelectorAll(".accordion__edit-button").forEach((button) => {
+      document.querySelectorAll('.accordion__edit-button').forEach((button) => {
         button.onclick = () => {
-          const selectedId = Number(button.getAttribute("data-edit-id"));
+          const selectedId = Number(button.getAttribute('data-edit-id'));
           const selectedUser = users.find((user) => user.id === selectedId);
           openAsideUsers(selectedUser);
         };
       });
 
-      document
-        .querySelectorAll(".accordion__delete-button")
-        .forEach((button) => {
-          button.onclick = () => {
-            deleteUser(button.getAttribute("data-delete-id"), users);
-          };
-        });
+      document.querySelectorAll('.accordion__delete-button').forEach((button) => {
+        button.onclick = () => {
+          deleteUser(button.getAttribute('data-delete-id'), users);
+        };
+      });
 
-      const headers = document.querySelectorAll(".accordion-header");
+      const headers = document.querySelectorAll('.accordion-header');
       headers.forEach((header) => {
         header.onclick = (event) => {
-          if (event.target.classList.contains("accordion__button")) {
+          if (event.target.classList.contains('accordion__button')) {
             const content = header.nextElementSibling;
             if (content.style.maxHeight) {
               content.style.maxHeight = null;
-              header.classList.remove("active");
+              header.classList.remove('active');
             } else {
-              document
-                .querySelectorAll(".accordion-content")
-                .forEach((item) => {
-                  item.style.maxHeight = null;
-                });
-              content.style.maxHeight = content.scrollHeight + "px";
-              header.classList.add("active");
+              document.querySelectorAll('.accordion-content').forEach((item) => {
+                item.style.maxHeight = null;
+              });
+              content.style.maxHeight = content.scrollHeight + 'px';
+              header.classList.add('active');
             }
           }
         };
       });
     });
   } else {
-    accordion.insertAdjacentHTML(
-      "beforeend",
-      `<div class="accordion-message">Список контактов пуст</div>`
-    );
+    accordion.insertAdjacentHTML('beforeend', `<div class="accordion-message">Список контактов пуст</div>`);
   }
 };
 
-const checkCategories = () => {
-  if (document.querySelectorAll(".accordion-content").length > 0) {
-    document
-      .querySelectorAll(".accordion-content")
-      .forEach((element, index) => {
-        if (!element.hasChildNodes()) {
-          document.querySelectorAll(".accordion__button")[
-            index
-          ].disabled = true;
-          document
-            .querySelectorAll(".accordion__button")
-            [index].classList.add("empty");
-        } else {
-          document.querySelectorAll(".accordion__button")[
-            index
-          ].disabled = false;
-          document
-            .querySelectorAll(".accordion__button")
-            [index].classList.remove("empty");
-        }
-      });
-  }
-};
-
-const deleteUser = (id, users) => {
-  document.querySelector(`[data-user-id="${id}"]`).remove();
-  const filteredArray = filterUsersById(users, id);
-  LocalStorageUtil.setItem("users", filteredArray);
-  renderAllUsers();
-};
-
-const deleteCategory = (element, categories) => {
-  const idToRemove = Number(element.getAttribute("data-id"));
-  document.querySelector(`[data-parent-id="${idToRemove}"]`).remove();
-  const filteredArray = categories.filter((item) => item.id !== idToRemove);
-  LocalStorageUtil.setItem("categories", filteredArray);
-  sortUsersByDeletedCategory(idToRemove);
-  renderCategory();
-};
-
-// Удаление пользователей по удаляемой категории
-const sortUsersByDeletedCategory = (idToRemove) => {
-  const users = LocalStorageUtil.getItem("users");
-  const newUsers = users.filter((item) => Number(item.category) !== idToRemove);
-  LocalStorageUtil.setItem("users", newUsers);
-};
-
-function filterUsersById(users, id) {
-  return users.filter((item) => item.id !== Number(id));
-}
-
-function filterUsersByCategory(users, category) {
-  return users.filter((item) => item.category == category.id);
-}
-
-const openAsideUsers = (user = {}) => {
-  renderCategoryForUser();
-  document.getElementById("aside__add-user").classList.add("active");
-  cleanInputFormUser(user);
-};
-
-// Функция заполнения\очистки формы пользователя
-function cleanInputFormUser(user) {
-  if (JSON.stringify(user) === "{}") {
-    console.log("empty");
-    user = {
-      fullName: "",
-      phone: "",
-      category: undefined,
-    };
-  } else {
-    createdUser = user;
-  }
-  document.getElementById("profileData").value = user.fullName;
-  document.getElementById("profilePhone").value = user.phone;
-  document.getElementById("profileCategory").value = user.category;
-  createUser(user);
-}
-
-function createUser(user) {
-  // Маска для телефона
-    personPhone.addEventListener('input', function(event) {
-      let input = event.target.value.replace(/\D/g, ''); 
-      if (input.startsWith('7')) { 
-        input = input.substring(1);
-      }
-      let formattedInput = '+7';
-  
-      if (input.length > 0) {
-        formattedInput += ' (' + input.substring(0, 3); 
-      }
-      if (input.length >= 4) {
-        formattedInput += ') ' + input.substring(3, 6); 
-      }
-      if (input.length >= 7) {
-        formattedInput += '-' + input.substring(6, 8); 
-      }
-      if (input.length >= 9) {
-        formattedInput += '-' + input.substring(8, 10); 
-      }
-  
-      event.target.value = formattedInput.substring(0, 18);
-      createdUser.phone = event.target.value;
-    });
-  
-    personPhone.addEventListener('keydown', function(event) {
-      // Если пользователь нажимает BACKSPACE или DELETE, удаляем последний символ
-      if (event.key === 'Backspace' || event.key === 'Delete') {
-        let input = event.target.value.replace(/\D/g, '');
-        if (input.startsWith('7')) {
-          input = input.substring(1);
-        }
-        event.target.value = formatPhone(input.substring(0, input.length - 1));
-        event.preventDefault();
-      }
-    });
-  
-    function formatPhone(input) {
-      let formattedInput = '+7';
-      if (input.length > 0) {
-        formattedInput += ' (' + input.substring(0, 3);
-      }
-      if (input.length >= 4) {
-        formattedInput += ') ' + input.substring(3, 6);
-      }
-      if (input.length >= 7) {
-        formattedInput += '-' + input.substring(6, 8);
-      }
-      if (input.length >= 9) {
-        formattedInput += '-' + input.substring(8, 10);
-      }
-      return formattedInput.substring(0, 18);
-    }
-  // ================================================================================
-  
-  personData.addEventListener("input", () => {
-    createdUser.fullName = personData.value;
-  });
-  personCategory.addEventListener("change", (event) => {
-    createdUser.category = event.target.value;
-  });
-
-  savePerson.onclick = function () {
-    const usersArray = LocalStorageUtil.getItem("users");
-    if (
-      createdUser.fullName &&
-      createdUser.fullName.trim().split(/\s+/).length >= 3 &&
-      createdUser.phone.length === 18 &&
-      createdUser.category !== ""
-    ) {
-      if (!createdUser.hasOwnProperty("id")) {
-        console.log("no id");
-        let lastId = 0;
-        if (usersArray.length > 0) {
-          console.log("here");
-          lastId = usersArray.at(-1).id + 1;
-        }
-        createdUser.id = lastId;
-      }
-    }
-    // Проверяем, существует ли пользователь с данным id
-    if (
-      !usersArray.some((user) => Number(user.id) === Number(createdUser.id))
-    ) {
-      LocalStorageUtil.setItem("users", [...usersArray, createdUser]);
-    } else {
-      // Если объект с таким id уже существует:
-      const index = usersArray.findIndex((item) => item.id === createdUser.id);
-      const updatedArray = [...usersArray];
-      updatedArray[index] = createdUser;
-      LocalStorageUtil.setItem("users", updatedArray);
-    }
-    createdUser = {};
-    closeAside(1);
-  };
-}
-
-const closeAside = (index) => {
-  document.querySelectorAll(".aside")[index].classList.remove("active");
-  renderAllUsers();
-};
-
-export { renderCategory, renderAllUsers, openAsideUsers, closeAside };
+export { renderCategory, renderAllUsers, renderCategoryForUser };

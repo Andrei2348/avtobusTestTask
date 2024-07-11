@@ -49,7 +49,9 @@
               </svg>
             </button>
           </div>
-          <div class="aside__categories-list" id="categories__list"></div>
+          <div class="aside__categories-list--wrapper">
+            <div class="aside__categories-list" id="categories__list"></div>
+          </div>
           <div class="aside__buttons-wrapper">
             <button class="button transparent__button" id="add__category">Добавить</button>
             <button class="button blue__button" id="save__category" disabled>Сохранить</button>
@@ -80,8 +82,11 @@
             <form class="aside__form">
               <input class="aside__input" type="text" placeholder="Введите ФИО" id="profileData" />
               <input class="aside__input" type="text" placeholder="Введите номер" id="profilePhone" />
-              <select class="aside__select" id="profileCategory"></select>
+              <div class="aside__select-wrapper">
+                <select class="aside__select" id="profileCategory"></select>
+              </div>
             </form>
+
           </div>
           <div class="aside__buttons-wrapper">
             <button class="button blue__button" id="save__person">Сохранить</button>
@@ -90,7 +95,10 @@
       </div>
       <section class="section">
         <div class="container">
-          <div class="accordion"></div>
+          <div class="accordion__container">
+            <div class="accordion"></div>
+
+          </div>
         </div>
       </section>
     </main>
